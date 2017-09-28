@@ -78,9 +78,13 @@ fun timeForHalfWay(t1: Double, v1: Double,
 fun whichRookThreatens(kingX: Int, kingY: Int,
                        rookX1: Int, rookY1: Int,
                        rookX2: Int, rookY2: Int): Int {
-    if ((rookX1 == kingX || rookY1 == kingY) && (rookX2 == kingX || rookY2 == kingY)) return 3
-    if (rookX1 == kingX || rookY1 == kingY) return 1
-    if (rookX2 == kingX || rookY2 == kingY) return 2
+    val x1 = rookX1 == kingX
+    val x2 = rookX2 == kingX
+    val y1 = rookY1 == kingY
+    val y2 = rookY2 == kingY
+    if ((x1 || y1) && (x2 || y2)) return 3
+    if (x1 || y1) return 1
+    if (x2 || y2) return 2
     else return 0
     }
 /**
@@ -98,8 +102,10 @@ fun rookOrBishopThreatens(kingX: Int, kingY: Int,
                           bishopX: Int, bishopY: Int): Int {
     val xdist = Math.abs(kingX - bishopX)
     val ydist = Math.abs(kingY - bishopY)
-    if ((rookX == kingX || rookY == kingY) && (xdist == ydist)) return 3
-    if (rookX == kingX || rookY == kingY) return 1
+    val x = kingX == rookX
+    val y = kingY == rookY
+    if ((x || y) && (xdist == ydist)) return 3
+    if (x || y) return 1
     if (xdist == ydist) return 2
     else return 0
 
@@ -114,9 +120,12 @@ fun rookOrBishopThreatens(kingX: Int, kingY: Int,
  * Если такой треугольник не существует, вернуть -1.
  */
 fun triangleKind(a: Double, b: Double, c: Double): Int {
+    val bc = sqr(b) + sqr(c)
+    val ac = sqr(a) + sqr(c)
+    val ab = sqr(a) + sqr(b)
     if (a + b <= c || c + b <= a || c + a <=b) return -1
-    else if (sqr(a) == sqr(b) + sqr(c) || sqr(b) == sqr(a) + sqr(c) || sqr(c) == sqr(a) + sqr(b))  return 1
-    else if (sqr(a) > sqr(b) + sqr(c) || sqr(b) > sqr(a) + sqr(c) || sqr(c) > sqr(b) + sqr(a)) return 2
+    else if (sqr(a) == bc || sqr(b) == ac || sqr(c) == ab)  return 1
+    else if (sqr(a) > bc || sqr(b) > ac || sqr(c) > ab) return 2
     else return 0
 }
 
@@ -135,11 +144,10 @@ fun segmentLength(a: Int, b: Int, c: Int, d: Int): Int {
         if ((b > c) && (b < d)) return b - c
         else return d - c
     }
-    if (a > c) {
+    else {
         if (d < a) return -1
         if (d == a) return 0
         if  ((d > a) && (d < b)) return d - a
         else return b - a
     }
-    else return -1
 }
