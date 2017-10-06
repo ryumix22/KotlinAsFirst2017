@@ -25,10 +25,7 @@ fun isNumberHappy(number: Int): Boolean {
     val secnum = number / 100 % 10
     val thirdnum = number / 10 % 10
     val fourthnum = number % 10
-    return when {
-        ((firstnum + secnum) == (thirdnum + fourthnum)) -> true
-        else -> false
-    }
+    return (firstnum + secnum) == (thirdnum + fourthnum)
 }
 
 /**
@@ -43,10 +40,7 @@ fun queenThreatens(x1: Int, y1: Int, x2: Int, y2: Int): Boolean {
     val ydist = abs(y1 - y2)
     val x = x1 == x2
     val y = y1 == y2
-    return when {
-        ((xdist == ydist) || x || y) -> true
-        else -> false
-    }
+    return ((xdist == ydist) || x || y)
 
 }
 
@@ -60,10 +54,7 @@ fun queenThreatens(x1: Int, y1: Int, x2: Int, y2: Int): Boolean {
 fun circleInside(x1: Double, y1: Double, r1: Double,
                  x2: Double, y2: Double, r2: Double): Boolean {
     val distcentre = sqrt(sqr(x2 - x1) + sqr(y2 - y1))
-    return when {
-        ((distcentre + r1) <= r2) -> true
-        else -> false
-    }
+    return ((distcentre + r1) <= r2)
 }
 
 /**
