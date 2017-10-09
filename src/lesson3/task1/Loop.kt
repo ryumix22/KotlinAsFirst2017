@@ -2,6 +2,7 @@
 package lesson3.task1
 
 import lesson1.task1.sqr
+import java.lang.Math.*
 
 /**
  * Пример
@@ -67,7 +68,7 @@ fun digitNumber(n: Int): Int {
     var num = n
     return if (n == 0) 1
     else {
-        while (n >0) {
+        while (num > 0) {
             num /= 10
             res++
         }
@@ -82,20 +83,20 @@ fun digitNumber(n: Int): Int {
  * Ряд Фибоначчи определён следующим образом: fib(1) = 1, fib(2) = 1, fib(n+2) = fib(n) + fib(n+1)
  */
 fun fib(n: Int): Int {
-    var fib2 = 1
-    var fib3 = 2
-    var fibn = 0
+    var secFib = 1
+    var thirdFib = 2
+    var fibN = 0
     if ((n == 1) || (n == 2)) return 1
     if (n == 3) return 2
     else {
         for (i in 1..n - 3) {
-            fibn = fib2 + fib3
-            fib2 = fib3
-            fib3 = fibn
+            fibN = secFib + thirdFib
+            secFib = thirdFib
+            thirdFib = fibN
 
         }
     }
-    return fibn
+    return fibN
 }
 
 /**
@@ -105,13 +106,13 @@ fun fib(n: Int): Int {
  * минимальное число k, которое делится и на m и на n без остатка
  */
 fun lcm(m: Int, n: Int): Int {
-    var nn = n
-    var mm = m
-    while (nn != mm) {
-        if (mm < nn) nn -= mm
-        else mm -= nn
+    var numN = n
+    var nunM = m
+    while (numN != nunM) {
+        if (nunM < numN) numN -= nunM
+        else nunM -= numN
     }
-    return n / mm * m
+    return n / nunM * m
 }
 
 /**
@@ -120,11 +121,12 @@ fun lcm(m: Int, n: Int): Int {
  * Для заданного числа n > 1 найти минимальный делитель, превышающий 1
  */
 fun minDivisor(n: Int): Int {
-   var del = n
-    for (i in 2..n) {
-        if ((del % i == 0) && (i < del)) del = i
+    var devisor = n
+    val endOfCycle = Math.sqrt(n.toDouble()).toInt()
+    for (i in 2..endOfCycle) {
+        if ((devisor % i == 0) && (i < devisor)) devisor = i
     }
-    return del
+    return devisor
 }
 
 /**
@@ -133,10 +135,10 @@ fun minDivisor(n: Int): Int {
  * Для заданного числа n > 1 найти максимальный делитель, меньший n
  */
 fun maxDivisor(n: Int): Int {
-    val del = n
-    var nn = del / 2
-    while (del % nn != 0) nn -= 1
-    return nn
+    val divisor = n
+    var maxDivisor = n / 2
+    while (divisor % maxDivisor != 0) maxDivisor -= 1
+    return maxDivisor
 }
 
 /**
@@ -147,13 +149,13 @@ fun maxDivisor(n: Int): Int {
  * Например, 25 и 49 взаимно простые, а 6 и 8 -- нет.
  */
 fun isCoPrime(m: Int, n: Int): Boolean {
-    var mm = m
-    var nn = n
-    while (mm != nn) {
-        if (mm > nn) mm -= nn
-        else nn -= mm
+    var numM = m
+    var numN = n
+    while (numM != numN) {
+        if (numM > numN) numM -= numN
+        else numN -= numM
     }
-    return (nn == 1)
+    return (numN == 1)
 }
 
 /**
@@ -166,7 +168,7 @@ fun isCoPrime(m: Int, n: Int): Boolean {
 fun squareBetweenExists(m: Int, n: Int): Boolean {
     var res = 0
     for (i in m..n) {
-        if (i.toDouble() == sqr(((Math.sqrt(i.toDouble())).toInt()).toDouble())) res = i
+        if (Math.sqrt(i.toDouble()) % 1.0 == 0.0) res = i
     }
     return res != 0
 }
@@ -178,7 +180,22 @@ fun squareBetweenExists(m: Int, n: Int): Boolean {
  * sin(x) = x - x^3 / 3! + x^5 / 5! - x^7 / 7! + ...
  * Нужную точность считать достигнутой, если очередной член ряда меньше eps по модулю
  */
-fun sin(x: Double, eps: Double): Double = Math.sin(x)
+fun sin(x: Double, eps: Double): Double {
+    var powOfX = 1.0
+    var term = 1.0
+    var count = 1
+    var sinX = 0.0
+    val elemX = if ((x / PI) % 1.0 == 0.0) 0.0 else x
+    while (abs(term) >= eps){
+        term = if (count % 2 != 0) pow(elemX, powOfX) /  factorial(powOfX.toInt())
+        else -1.0 * pow(elemX, powOfX) /  factorial(powOfX.toInt())
+        sinX += term
+        powOfX += 2.0
+        count += 1
+
+    }
+    return sinX
+}
 
 /**
  * Средняя
@@ -187,7 +204,23 @@ fun sin(x: Double, eps: Double): Double = Math.sin(x)
  * cos(x) = 1 - x^2 / 2! + x^4 / 4! - x^6 / 6! + ...
  * Нужную точность считать достигнутой, если очередной член ряда меньше eps по модулю
  */
-fun cos(x: Double, eps: Double): Double = Math.cos(x)
+fun cos(x: Double, eps: Double): Double {
+    var powOfX = 2.0
+    var term = 1.0
+    var count = 1
+    var cosX = 1.0
+    val elemX = if ((x / PI) % 1.0 == 0.0) if ((x / PI) % 2 == 0.0) 2 * PI else PI
+    else x
+    while (abs(term) >= eps){
+        term = if (count % 2 != 0) -1.0 * pow(elemX, powOfX) /  factorial(powOfX.toInt())
+        else pow(elemX, powOfX) /  factorial(powOfX.toInt())
+        cosX += term
+        powOfX += 2.0
+        count += 1
+
+    }
+    return cosX
+}
 
 /**
  * Средняя
@@ -198,8 +231,8 @@ fun cos(x: Double, eps: Double): Double = Math.cos(x)
 fun revert(n: Int): Int {
     var num = n
     var res = 0
-    while (n != 0) {
-        res = res * 10 + (res % 10)
+    while (num != 0) {
+        res = res * 10 + (num % 10)
         num /= 10
     }
     return res
@@ -212,15 +245,7 @@ fun revert(n: Int): Int {
  * первая цифра равна последней, вторая -- предпоследней и так далее.
  * 15751 -- палиндром, 3653 -- нет.
  */
-fun isPalindrome(n: Int): Boolean {
-    var num = n
-    var res = 0
-    while (n != 0) {
-        res = res * 10 + (res % 10)
-        num /= 10
-    }
-    return res == num
-}
+fun isPalindrome(n: Int): Boolean = revert(n) == n
 
 /**
  * Средняя
@@ -234,8 +259,8 @@ fun hasDifferentDigits(n: Int): Boolean {
     var b = num % 100 / 10
     if (n < 10) return false
         while ((a == b) && (num != 0)) {
-            b = a
-            a = num % 10
+            a = b
+            b = num % 10
             num /= 10
         }
         return (num != 0)
@@ -257,6 +282,22 @@ fun squareSequenceDigit(n: Int): Int {
     }
     return ((res[n-1]).toInt() - 48)
 }
+/* Я пытался сделать таким образом, но у меня была ошибка при n=10, и так же при n>10 тест не останавливался
+ {
+    var sqrs = 1
+    var countOfAllSqr: Int
+    var countOfAllNum = 0
+    var res = 0
+    while (b < n) {
+        countOfAllSqr = digitNumber(sqrs * sqrs)
+        res = res * (pow(10.0, countOfAllSqr.toDouble())).toInt() + sqrs * sqrs
+        countOfAllNum = digitNumber(res)
+        sqrs += 1
+    }
+    return if (countOfAllNum == n) res % 10
+    else (res % (pow(10.0, (countOfAllNum - n + 1.0)).toInt())) / 10
+}
+*/
 
 /**
  * Сложная
