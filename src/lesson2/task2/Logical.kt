@@ -40,7 +40,7 @@ fun queenThreatens(x1: Int, y1: Int, x2: Int, y2: Int): Boolean {
     val yDist = abs(y1 - y2)
     val xDanger = x1 == x2
     val yDanger = y1 == y2
-    return (xDist == yDist) || x || y
+    return (xDist == yDist) || xDanger || yDanger
 
 }
 
