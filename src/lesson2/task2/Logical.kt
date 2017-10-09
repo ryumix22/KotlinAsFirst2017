@@ -38,8 +38,8 @@ fun isNumberHappy(number: Int): Boolean {
 fun queenThreatens(x1: Int, y1: Int, x2: Int, y2: Int): Boolean {
     val xDist = abs(x1 - x2)
     val yDist = abs(y1 - y2)
-    val x = x1 == x2
-    val y = y1 == y2
+    val xDanger = x1 == x2
+    val yDanger = y1 == y2
     return (xDist == yDist) || x || y
 
 }
