@@ -65,7 +65,7 @@ fun digitCountInNumber(n: Int, m: Int): Int =
  */
 fun digitNumber(n: Int): Int {
     var res = 0
-    var num = n
+    var num = if (n < 0) -1 * n else n
     return if (n == 0) 1
     else {
         while (num > 0) {
@@ -166,11 +166,11 @@ fun isCoPrime(m: Int, n: Int): Boolean {
  * Например, для интервала 21..28 21 <= 5*5 <= 28, а для интервала 51..61 квадрата не существует.
  */
 fun squareBetweenExists(m: Int, n: Int): Boolean {
-    var res = 0
+    var res = -1
     for (i in m..n) {
         if (Math.sqrt(i.toDouble()) % 1.0 == 0.0) res = i
     }
-    return res != 0
+    return res != -1
 }
 
 /**
@@ -185,7 +185,7 @@ fun sin(x: Double, eps: Double): Double {
     var term = 1.0
     var count = 1
     var sinX = 0.0
-    val elemX = if ((x / PI) % 1.0 == 0.0) 0.0 else x
+    val elemX = x % (2 * PI)
     while (abs(term) >= eps){
         term = if (count % 2 != 0) pow(elemX, powOfX) /  factorial(powOfX.toInt())
         else -1.0 * pow(elemX, powOfX) /  factorial(powOfX.toInt())
@@ -258,12 +258,12 @@ fun hasDifferentDigits(n: Int): Boolean {
     var a = num % 10
     var b = num % 100 / 10
     if (n < 10) return false
-        while ((a == b) && (num != 0)) {
-            a = b
-            b = num % 10
-            num /= 10
-        }
-        return (num != 0)
+    while ((a == b) && (num != 0)) {
+        a = b
+        b = num % 10
+        num /= 10
+    }
+    return (num != 0)
 }
 
 /**
