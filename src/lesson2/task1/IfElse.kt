@@ -84,7 +84,7 @@ fun whichRookThreatens(kingX: Int, kingY: Int,
     else 1
     return if (dangerOnX2 || dangerOnY2) 2
     else 0
-    }
+}
 /**
  * Простая
  *
@@ -98,13 +98,13 @@ fun whichRookThreatens(kingX: Int, kingY: Int,
 fun rookOrBishopThreatens(kingX: Int, kingY: Int,
                           rookX: Int, rookY: Int,
                           bishopX: Int, bishopY: Int): Int {
-    val distXBtwKingBishop = Math.abs(kingX - bishopX)
-    val distYBtwKingBishop = Math.abs(kingY - bishopY)
+    val distanceXBetweenKingBishop = Math.abs(kingX - bishopX)
+    val distanceYBetweenKingBishop = Math.abs(kingY - bishopY)
     val dangerByRookOnX = kingX == rookX
     val dangerByRookOnY = kingY == rookY
-    if (dangerByRookOnX|| dangerByRookOnY) return if (distXBtwKingBishop == distYBtwKingBishop) 3
+    return if (dangerByRookOnX|| dangerByRookOnY) if (distanceXBetweenKingBishop == distanceYBetweenKingBishop) 3
     else 1
-    return if (distXBtwKingBishop == distYBtwKingBishop) 2
+    else if (distanceXBetweenKingBishop == distanceYBetweenKingBishop) 2
     else 0
 
 }
@@ -136,18 +136,13 @@ fun triangleKind(a: Double, b: Double, c: Double): Int {
  * Если пересечения нет, вернуть -1.
  */
 fun segmentLength(a: Int, b: Int, c: Int, d: Int): Int {
-     if (b == c) return 0
-    return when {
-        a <= c -> when {
-            b in c..d -> b - c
-            c > b -> -1
-            else -> d - c
-        }
-        else -> when {
-            d in a..b -> d - a
-            a > d -> -1
-            else -> b - a
-        }
+    val firstDot = if (a <= c) b else d
+    val secondDot = if (a <= c) c else a
+    val thirdDot = if (a <= c) d else b
+    return if (b == c) 0
+    else when {
+        firstDot in secondDot..thirdDot -> firstDot - secondDot
+        secondDot > firstDot -> -1
+        else -> thirdDot - secondDot
     }
-
 }
