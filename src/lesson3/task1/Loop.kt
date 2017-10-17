@@ -3,6 +3,7 @@ package lesson3.task1
 
 import lesson1.task1.sqr
 import java.lang.Math.*
+import kotlin.coroutines.experimental.EmptyCoroutineContext.plus
 
 /**
  * Пример
@@ -64,15 +65,15 @@ fun digitCountInNumber(n: Int, m: Int): Int =
  * Например, число 1 содержит 1 цифру, 456 -- 3 цифры, 65536 -- 5 цифр.
  */
 fun digitNumber(n: Int): Int {
-    var res = 0
-    var num = if (n < 0) -1 * n else n
+    var result = 0
+    var number = n
     return if (n == 0) 1
     else {
-        while (num > 0) {
-            num /= 10
-            res++
+        while (number > 0) {
+            number /= 10
+            result++
         }
-        res
+        result
     }
 }
 
@@ -83,15 +84,15 @@ fun digitNumber(n: Int): Int {
  * Ряд Фибоначчи определён следующим образом: fib(1) = 1, fib(2) = 1, fib(n+2) = fib(n) + fib(n+1)
  */
 fun fib(n: Int): Int {
-    var secFib = 1
+    var secondFib = 1
     var thirdFib = 2
     var fibN = 0
     if ((n == 1) || (n == 2)) return 1
     if (n == 3) return 2
     else {
         for (i in 1..n - 3) {
-            fibN = secFib + thirdFib
-            secFib = thirdFib
+            fibN = secondFib + thirdFib
+            secondFib = thirdFib
             thirdFib = fibN
 
         }
@@ -106,13 +107,13 @@ fun fib(n: Int): Int {
  * минимальное число k, которое делится и на m и на n без остатка
  */
 fun lcm(m: Int, n: Int): Int {
-    var numN = n
-    var nunM = m
-    while (numN != nunM) {
-        if (nunM < numN) numN -= nunM
-        else nunM -= numN
+    var numberN = n
+    var numberM = m
+    while (numberN != numberM) {
+        if (numberM < numberN) numberN -= numberM
+        else numberM -= numberN
     }
-    return n / nunM * m
+    return n / numberM * m
 }
 
 /**
@@ -121,12 +122,12 @@ fun lcm(m: Int, n: Int): Int {
  * Для заданного числа n > 1 найти минимальный делитель, превышающий 1
  */
 fun minDivisor(n: Int): Int {
-    var devisor = n
-    val endOfCycle = Math.sqrt(n.toDouble()).toInt()
+    var divisor = n
+    val endOfCycle = sqrt(n.toDouble()).toInt()
     for (i in 2..endOfCycle) {
-        if ((devisor % i == 0) && (i < devisor)) devisor = i
+        if ((divisor % i == 0) && (i < divisor)) divisor = i
     }
-    return devisor
+    return divisor
 }
 
 /**
@@ -149,13 +150,13 @@ fun maxDivisor(n: Int): Int {
  * Например, 25 и 49 взаимно простые, а 6 и 8 -- нет.
  */
 fun isCoPrime(m: Int, n: Int): Boolean {
-    var numM = m
-    var numN = n
-    while (numM != numN) {
-        if (numM > numN) numM -= numN
-        else numN -= numM
+    var numberM = m
+    var numberN = n
+    while (numberM != numberN) {
+        if (numberM > numberN) numberM -= numberN
+        else numberN -= numberM
     }
-    return (numN == 1)
+    return (numberN == 1)
 }
 
 /**
@@ -166,11 +167,11 @@ fun isCoPrime(m: Int, n: Int): Boolean {
  * Например, для интервала 21..28 21 <= 5*5 <= 28, а для интервала 51..61 квадрата не существует.
  */
 fun squareBetweenExists(m: Int, n: Int): Boolean {
-    var res = -1
+    var result = 0
     for (i in m..n) {
-        if (Math.sqrt(i.toDouble()) % 1.0 == 0.0) res = i
+        if (sqrt(i.toDouble()) % 1.0 == 0.0) result = i
     }
-    return res != -1
+    return result != 0
 }
 
 /**
@@ -181,16 +182,16 @@ fun squareBetweenExists(m: Int, n: Int): Boolean {
  * Нужную точность считать достигнутой, если очередной член ряда меньше eps по модулю
  */
 fun sin(x: Double, eps: Double): Double {
-    var powOfX = 1.0
+    var powerOfX = 1.0
     var term = 1.0
     var count = 1
     var sinX = 0.0
-    val elemX = x % (2 * PI)
+    val elemX = x % (2.0 * PI)
     while (abs(term) >= eps){
-        term = if (count % 2 != 0) pow(elemX, powOfX) /  factorial(powOfX.toInt())
-        else -1.0 * pow(elemX, powOfX) /  factorial(powOfX.toInt())
+        term = if (count % 2 != 0) pow(elemX, powerOfX) /  factorial(powerOfX.toInt())
+        else -1.0 * pow(elemX, powerOfX) /  factorial(powerOfX.toInt())
         sinX += term
-        powOfX += 2.0
+        powerOfX += 2.0
         count += 1
 
     }
@@ -204,24 +205,7 @@ fun sin(x: Double, eps: Double): Double {
  * cos(x) = 1 - x^2 / 2! + x^4 / 4! - x^6 / 6! + ...
  * Нужную точность считать достигнутой, если очередной член ряда меньше eps по модулю
  */
-fun cos(x: Double, eps: Double): Double {
-    var powOfX = 2.0
-    var term = 1.0
-    var count = 1
-    var cosX = 1.0
-    val elemX = if ((x / PI) % 1.0 == 0.0) if ((x / PI) % 2 == 0.0) 2 * PI else PI
-    else x
-    while (abs(term) >= eps){
-        term = if (count % 2 != 0) -1.0 * pow(elemX, powOfX) /  factorial(powOfX.toInt())
-        else pow(elemX, powOfX) /  factorial(powOfX.toInt())
-        cosX += term
-        powOfX += 2.0
-        count += 1
-
-    }
-    return cosX
-}
-
+fun cos(x: Double, eps: Double): Double = sin(x + PI / 2.0)
 /**
  * Средняя
  *
@@ -229,13 +213,13 @@ fun cos(x: Double, eps: Double): Double {
  * Не использовать строки при решении задачи.
  */
 fun revert(n: Int): Int {
-    var num = n
-    var res = 0
-    while (num != 0) {
-        res = res * 10 + (num % 10)
-        num /= 10
+    var number = n
+    var result = 0
+    while (number != 0) {
+        result = result * 10 + (number % 10)
+        number /= 10
     }
-    return res
+    return result
 }
 
 /**
@@ -254,16 +238,16 @@ fun isPalindrome(n: Int): Boolean = revert(n) == n
  * Например, 54 и 323 состоят из разных цифр, а 111 и 0 из одинаковых.
  */
 fun hasDifferentDigits(n: Int): Boolean {
-    var num = n
-    var a = num % 10
-    var b = num % 100 / 10
+    var number = n
+    var a = 0
+    var b = 0
     if (n < 10) return false
-    while ((a == b) && (num != 0)) {
-        a = b
-        b = num % 10
-        num /= 10
-    }
-    return (num != 0)
+        while ((a == b) && (number != 0)) {
+            a = number % 10
+            b = number % 100 / 10
+            number /= 10
+        }
+        return number != 0
 }
 
 /**
@@ -275,12 +259,12 @@ fun hasDifferentDigits(n: Int): Boolean {
  */
 fun squareSequenceDigit(n: Int): Int {
     var str: String
-    var res = ""
+    var result = ""
     for (i in 1..n) {
         str = (i * i).toString()
-        res += str
+        result += str
     }
-    return ((res[n-1]).toInt() - 48)
+    return ((result[n-1]).toInt() - 48)
 }
 /* Я пытался сделать таким образом, но у меня была ошибка при n=10, и так же при n>10 тест не останавливался
  {
