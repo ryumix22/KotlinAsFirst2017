@@ -102,7 +102,8 @@ fun rookOrBishopThreatens(kingX: Int, kingY: Int,
     val distanceYBetweenKingBishop = Math.abs(kingY - bishopY)
     val dangerByRookOnX = kingX == rookX
     val dangerByRookOnY = kingY == rookY
-    return if (dangerByRookOnX|| dangerByRookOnY) if (distanceXBetweenKingBishop == distanceYBetweenKingBishop) 3
+    return if (dangerByRookOnX|| dangerByRookOnY)
+        if (distanceXBetweenKingBishop == distanceYBetweenKingBishop) 3
     else 1
     else if (distanceXBetweenKingBishop == distanceYBetweenKingBishop) 2
     else 0

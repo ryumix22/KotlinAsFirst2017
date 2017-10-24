@@ -66,7 +66,7 @@ fun digitCountInNumber(n: Int, m: Int): Int =
  */
 fun digitNumber(n: Int): Int {
     var result = 0
-    var number = n
+    var number = if (n > 0) n else -1 * n
     return if (n == 0) 1
     else {
         while (number > 0) {
@@ -123,7 +123,7 @@ fun lcm(m: Int, n: Int): Int {
  */
 fun minDivisor(n: Int): Int {
     var divisor = n
-    val endOfCycle = sqrt(n.toDouble()).toInt()
+    val endOfCycle = round(sqrt(n.toDouble())).toInt()
     for (i in 2..endOfCycle) {
         if ((divisor % i == 0) && (i < divisor)) divisor = i
     }
@@ -167,12 +167,12 @@ fun isCoPrime(m: Int, n: Int): Boolean {
  * Например, для интервала 21..28 21 <= 5*5 <= 28, а для интервала 51..61 квадрата не существует.
  */
 fun squareBetweenExists(m: Int, n: Int): Boolean {
-    var result = 0
-    for (i in m..n) {
-        if (sqrt(i.toDouble()) % 1.0 == 0.0) result = i
-    }
-    return result != 0
+    val numberM = sqrt(m.toDouble()).toInt()
+    val numberN = sqrt(n.toDouble()).toInt()
+    return (sqrt(m.toDouble()) % 1.0 == 0.0) ||
+            (numberM != numberN)
 }
+
 
 /**
  * Средняя
@@ -187,9 +187,11 @@ fun sin(x: Double, eps: Double): Double {
     var count = 1
     var sinX = 0.0
     val elemX = x % (2.0 * PI)
-    while (abs(term) >= eps){
-        term = if (count % 2 != 0) pow(elemX, powerOfX) /  factorial(powerOfX.toInt())
-        else -1.0 * pow(elemX, powerOfX) /  factorial(powerOfX.toInt())
+    while (abs(term) >= eps) {
+        term = if (count % 2 != 0)
+            pow(elemX, powerOfX) / factorial(powerOfX.toInt())
+        else
+            -1.0 * pow(elemX, powerOfX) / factorial(powerOfX.toInt())
         sinX += term
         powerOfX += 2.0
         count += 1
@@ -239,15 +241,15 @@ fun isPalindrome(n: Int): Boolean = revert(n) == n
  */
 fun hasDifferentDigits(n: Int): Boolean {
     var number = n
-    var a = 0
-    var b = 0
+    var a = number % 10
+    var b = number % 100 / 10
     if (n < 10) return false
-        while ((a == b) && (number != 0)) {
-            a = number % 10
-            b = number % 100 / 10
+    else while ((a == b) && (number >= 10)) {
+            a = b
             number /= 10
+            b = number % 100 / 10
         }
-        return number != 0
+        return number > 10
 }
 
 /**

@@ -4,6 +4,7 @@ package lesson4.task1
 
 import lesson1.task1.discriminant
 import lesson3.task1.isPrime
+import java.lang.Math.*
 
 /**
  * Пример
@@ -111,7 +112,7 @@ fun buildSumExample(list: List<Int>) = list.joinToString(separator = " + ", post
 fun abs(v: List<Double>): Double {
     var vector = 0.0
     for (i in 0 until v.size) vector += v[i] * v[i]
-    return Math.sqrt(vector)
+    return sqrt(vector)
 }
 
 /**
@@ -220,7 +221,18 @@ fun factorizeToString(n: Int): String = factorize(n).joinToString(separator = "*
  * Результат перевода вернуть в виде списка цифр в base-ичной системе от старшей к младшей,
  * например: n = 100, base = 4 -> (1, 2, 1, 0) или n = 250, base = 14 -> (1, 3, 12)
  */
-fun convert(n: Int, base: Int): List<Int> = TODO()
+fun convert(n: Int, base: Int): List<Int> {
+    val result = mutableListOf<Int>()
+    var number = n
+    var count = 0
+    if (number < base) result.add(number)
+    else while (number != 0) {
+        count = number % base
+        result.add(0, count)
+        number /= base
+    }
+     return result
+}
 
 /**
  * Сложная
@@ -230,7 +242,19 @@ fun convert(n: Int, base: Int): List<Int> = TODO()
  * строчными буквами: 10 -> a, 11 -> b, 12 -> c и так далее.
  * Например: n = 100, base = 4 -> 1210, n = 250, base = 14 -> 13c
  */
-fun convertToString(n: Int, base: Int): String = TODO()
+fun convertToString(n: Int, base: Int): String {
+    val translate = "abcdefghijklmnopqrstuvwxyz"
+    val list = convert(n, base)
+    var result = ""
+    var element = ""
+    for (i in 0 until list.size) {
+        element = if (list[i] > 9) translate[list[i] - 10].toString()
+        else list[i].toString()
+        result += element
+    }
+    return result
+}
+
 
 /**
  * Средняя
