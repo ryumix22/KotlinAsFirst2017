@@ -167,8 +167,8 @@ fun isCoPrime(m: Int, n: Int): Boolean {
  * Например, для интервала 21..28 21 <= 5*5 <= 28, а для интервала 51..61 квадрата не существует.
  */
 fun squareBetweenExists(m: Int, n: Int): Boolean {
-    val numberM = sqrt(m.toDouble()).toInt()
-    val numberN = sqrt(n.toDouble()).toInt()
+    val numberM = round(sqrt(m.toDouble())).toInt()
+    val numberN = round(sqrt(n.toDouble())).toInt()
     return (sqrt(m.toDouble()) % 1.0 == 0.0) ||
             (numberM != numberN)
 }
@@ -188,10 +188,9 @@ fun sin(x: Double, eps: Double): Double {
     var sinX = 0.0
     val elemX = x % (2.0 * PI)
     while (abs(term) >= eps) {
-        term = if (count % 2 != 0)
-            pow(elemX, powerOfX) / factorial(powerOfX.toInt())
-        else
-            -1.0 * pow(elemX, powerOfX) / factorial(powerOfX.toInt())
+        var parts = pow(elemX, powerOfX) / factorial(powerOfX.toInt())
+        term = if (count % 2 != 0) parts
+        else -1.0 * parts
         sinX += term
         powerOfX += 2.0
         count += 1
@@ -261,10 +260,10 @@ fun hasDifferentDigits(n: Int): Boolean {
  */
 fun squareSequenceDigit(n: Int): Int {
     var str: String
-    var result = ""
+    var result = StringBuilder()
     for (i in 1..n) {
         str = (i * i).toString()
-        result += str
+        result.append(str)
     }
     return ((result[n-1]).toInt() - 48)
 }
@@ -292,4 +291,13 @@ fun squareSequenceDigit(n: Int): Int {
  * 1123581321345589144...
  * Например, 2-я цифра равна 1, 9-я 2, 14-я 5.
  */
-fun fibSequenceDigit(n: Int): Int = TODO()
+fun fibSequenceDigit(n: Int): Int {
+    var str: String
+    var result = StringBuilder()
+    for (i in 1..n) {
+        str = fib(i).toString()
+        result.append(str)
+    }
+    return ((result[n-1]).toInt() - 48)
+
+}

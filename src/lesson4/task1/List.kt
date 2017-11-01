@@ -165,7 +165,7 @@ fun times(a: List<Double>, b: List<Double>): Double {
  */
 fun polynom(p: List<Double>, x: Double): Double {
     var res = 0.0
-    for (i in 0 until p.size) res += p[i] * Math.pow(x, i.toDouble())
+    for (i in 0 until p.size) res += p[i] * pow(x, i.toDouble())
     return res
 }
 
@@ -181,8 +181,8 @@ fun polynom(p: List<Double>, x: Double): Double {
  */
 fun accumulate(list: MutableList<Double>): MutableList<Double> {
     var sum = 0.0
-    for (i in 0 until list.size) {
-        sum += list[i]
+    for ((i, element) in list.withIndex()) {
+        sum += element
         list[i] = sum
     }
     return list
@@ -243,16 +243,17 @@ fun convert(n: Int, base: Int): List<Int> {
  * Например: n = 100, base = 4 -> 1210, n = 250, base = 14 -> 13c
  */
 fun convertToString(n: Int, base: Int): String {
-    val translate = "abcdefghijklmnopqrstuvwxyz"
+    val translate = listOf('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l',
+    'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z')
     val list = convert(n, base)
-    var result = ""
-    var element = ""
+    var result = StringBuilder()
+    var element: StringBuilder
     for (i in 0 until list.size) {
-        element = if (list[i] > 9) translate[list[i] - 10].toString()
-        else list[i].toString()
-        result += element
+        element = if (list[i] > 9) StringBuilder(translate[list[i] - 10].toString())
+        else StringBuilder(list[i].toString())
+        result.append(element)
     }
-    return result
+    return result.toString()
 }
 
 
@@ -263,7 +264,15 @@ fun convertToString(n: Int, base: Int): String {
  * из системы счисления с основанием base в десятичную.
  * Например: digits = (1, 3, 12), base = 14 -> 250
  */
-fun decimal(digits: List<Int>, base: Int): Int = TODO()
+fun decimal(digits: List<Int>, base: Int): Int {
+    var result = 0
+    var i = digits.size
+    for (element in digits) {
+            result += element * pow(base.toDouble(), (i - 1).toDouble()).toInt()
+            i -= 1
+    }
+    return result
+}
 
 /**
  * Сложная
