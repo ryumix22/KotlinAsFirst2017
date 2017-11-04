@@ -69,7 +69,6 @@ fun main(args: Array<String>) {
 
 fun dateStrToDigit(str: String): String {
     val date = str.split(" ")
-    var dateInNumbers = 0
     var addNull = ""
     val list = listOf("января", "февраля", "марта", "апреля", "мая", "июня", "июля",
             "августа", "сентября", "октября", "ноября", "декабря")
@@ -78,12 +77,10 @@ fun dateStrToDigit(str: String): String {
         for (part in date) {
             listWithDate.add(part)
         }
-        for (i in 0 until list.size) {
-            if (listWithDate[1] == list[i]) {
-                dateInNumbers = i + 1
-                listWithDate[1] = "$dateInNumbers"
-            }
-        }
+        listWithDate[1] = (list.indexOf(listWithDate[1]) + 1).toString()
+        if (listWithDate[1] == "0") return ""
+        val dateNumber = listWithDate[0]
+        if (dateNumber[0] == '0') listWithDate[0] = listWithDate[0].substring(1, listWithDate[0].length)
         for (i in 0 until listWithDate.size - 1) {
             addNull = listWithDate[i]
             if (listWithDate[i].toInt() in 0..9) listWithDate[i] = "0$addNull"
@@ -159,23 +156,22 @@ fun plusMinus(expression: String): Int {
     var number = 0
     val numbers = expression.split(" ")
     val list = mutableListOf<String>()
-    for (part in numbers) {
-        list.add(part)
-    }
-    var sum = list[0].toInt()
-    for (i in 0 until list.size - 1) {
-        if (i % 2 != 0) {
-            if (list[i + 1] != "+" || list[i + 1] != "-")
-                number = list[i + 1].toInt()
-            else throw IllegalArgumentException(expression)
-            when {
-                (list[i] == "+") -> sum += number
-                (list[i] == "-") -> sum -= number
-                else -> throw IllegalArgumentException(expression)
-            }
+    try {
+        for (part in numbers) {
+            list.add(part)
         }
+        var sum = list[0].toInt()
+        for (i in 0 until list.size - 1) {
+            if (i % 2 != 0) when {
+                    (list[i] == "+") -> sum += list[i + 1].toInt()
+                    (list[i] == "-") -> sum -= list[i + 1].toInt()
+                }
+            }
+        return sum
+        }
+     catch (e:NumberFormatException) {
+        throw IllegalArgumentException("For input string: $expression")
     }
-    return sum
 }
 
 /**
