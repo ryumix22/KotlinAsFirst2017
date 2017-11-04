@@ -66,7 +66,38 @@ fun main(args: Array<String>) {
  * День и месяц всегда представлять двумя цифрами, например: 03.04.2011.
  * При неверном формате входной строки вернуть пустую строку
  */
-fun dateStrToDigit(str: String): String = TODO()
+
+fun dateStrToDigit(str: String): String {
+    val date = str.split(" ")
+    var dateInNumbers = 0
+    var addNull = ""
+    val list = listOf("января", "февраля", "марта", "апреля", "мая", "июня", "июля",
+            "августа", "сентября", "октября", "ноября", "декабря")
+    var listWithDate = mutableListOf<String>()
+    try {
+        for (part in date) {
+            listWithDate.add(part)
+        }
+        for (i in 0 until list.size) {
+            if (listWithDate[1] == list[i]) {
+                dateInNumbers = i + 1
+                listWithDate[1] = "$dateInNumbers"
+            }
+        }
+        for (i in 0 until listWithDate.size) {
+            addNull = listWithDate[i]
+            if (listWithDate[i].toInt() in 0..9) listWithDate[i] = "0$addNull"
+            else listWithDate[i] = addNull
+        }
+        return listWithDate.joinToString(separator = ".")
+    }
+    catch (e: NumberFormatException) {
+        return ""
+    }
+    catch (a: IndexOutOfBoundsException){
+        return ""
+    }
+}
 
 /**
  * Средняя
@@ -124,7 +155,28 @@ fun bestHighJump(jumps: String): Int = TODO()
  * Вернуть значение выражения (6 для примера).
  * Про нарушении формата входной строки бросить исключение IllegalArgumentException
  */
-fun plusMinus(expression: String): Int = TODO()
+fun plusMinus(expression: String): Int {
+    var number = 0
+    val numbers = expression.split(" ")
+    val list = mutableListOf<String>()
+    for (part in numbers) {
+        list.add(part)
+    }
+    var sum = list[0].toInt()
+    for (i in 0 until list.size - 1) {
+        if (i % 2 != 0) {
+            if (list[i + 1] != "+" || list[i + 1] != "-")
+                number = list[i + 1].toInt()
+            else throw IllegalArgumentException("")
+            when {
+                (list[i] == "+") -> sum += number
+                (list[i] == "-") -> sum -= number
+                else -> throw IllegalArgumentException("")
+            }
+        }
+    }
+    return sum
+}
 
 /**
  * Сложная
