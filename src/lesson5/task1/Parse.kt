@@ -84,7 +84,7 @@ fun dateStrToDigit(str: String): String {
                 listWithDate[1] = "$dateInNumbers"
             }
         }
-        for (i in 0 until listWithDate.size) {
+        for (i in 0 until listWithDate.size - 1) {
             addNull = listWithDate[i]
             if (listWithDate[i].toInt() in 0..9) listWithDate[i] = "0$addNull"
             else listWithDate[i] = addNull
@@ -167,11 +167,11 @@ fun plusMinus(expression: String): Int {
         if (i % 2 != 0) {
             if (list[i + 1] != "+" || list[i + 1] != "-")
                 number = list[i + 1].toInt()
-            else throw IllegalArgumentException("")
+            else throw IllegalArgumentException(expression)
             when {
                 (list[i] == "+") -> sum += number
                 (list[i] == "-") -> sum -= number
-                else -> throw IllegalArgumentException("")
+                else -> throw IllegalArgumentException(expression)
             }
         }
     }
