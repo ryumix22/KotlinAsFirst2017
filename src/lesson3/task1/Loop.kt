@@ -1,9 +1,7 @@
 @file:Suppress("UNUSED_PARAMETER")
 package lesson3.task1
 
-import lesson1.task1.sqr
 import java.lang.Math.*
-import kotlin.coroutines.experimental.EmptyCoroutineContext.plus
 
 /**
  * Пример
@@ -66,7 +64,7 @@ fun digitCountInNumber(n: Int, m: Int): Int =
  */
 fun digitNumber(n: Int): Int {
     var result = 0
-    var number = if (n > 0) n else -1 * n
+    var number = abs(n)
     return if (n == 0) 1
     else {
         while (number > 0) {
@@ -84,16 +82,15 @@ fun digitNumber(n: Int): Int {
  * Ряд Фибоначчи определён следующим образом: fib(1) = 1, fib(2) = 1, fib(n+2) = fib(n) + fib(n+1)
  */
 fun fib(n: Int): Int {
+    var firstFib = 1
     var secondFib = 1
-    var thirdFib = 2
     var fibN = 0
     if ((n == 1) || (n == 2)) return 1
-    if (n == 3) return 2
     else {
-        for (i in 1..n - 3) {
-            fibN = secondFib + thirdFib
-            secondFib = thirdFib
-            thirdFib = fibN
+        for (i in 1..n - 2) {
+            fibN = firstFib + secondFib
+            firstFib = secondFib
+            secondFib = fibN
 
         }
     }
@@ -149,15 +146,7 @@ fun maxDivisor(n: Int): Int {
  * Взаимно простые числа не имеют общих делителей, кроме 1.
  * Например, 25 и 49 взаимно простые, а 6 и 8 -- нет.
  */
-fun isCoPrime(m: Int, n: Int): Boolean {
-    var numberM = m
-    var numberN = n
-    while (numberM != numberN) {
-        if (numberM > numberN) numberM -= numberN
-        else numberN -= numberM
-    }
-    return (numberN == 1)
-}
+fun isCoPrime(m: Int, n: Int): Boolean = lcm(m, n) / (n * m) == 1
 
 /**
  * Простая
@@ -242,9 +231,7 @@ fun hasDifferentDigits(n: Int): Boolean {
     var number = n
     var a = number % 10
     var b = number % 100 / 10
-    if (n < 10) return false
-    else while ((a == b) && (number >= 10)) {
-            a = b
+    while ((a == b) && (number >= 10)) {
             number /= 10
             b = number % 100 / 10
         }
@@ -261,28 +248,13 @@ fun hasDifferentDigits(n: Int): Boolean {
 fun squareSequenceDigit(n: Int): Int {
     var str: String
     var result = StringBuilder()
+    val translateTNumber = 48
     for (i in 1..n) {
         str = (i * i).toString()
         result.append(str)
     }
-    return ((result[n-1]).toInt() - 48)
+    return (result[n-1]).toInt() - translateTNumber
 }
-/* Я пытался сделать таким образом, но у меня была ошибка при n=10, и так же при n>10 тест не останавливался
- {
-    var sqrs = 1
-    var countOfAllSqr: Int
-    var countOfAllNum = 0
-    var res = 0
-    while (b < n) {
-        countOfAllSqr = digitNumber(sqrs * sqrs)
-        res = res * (pow(10.0, countOfAllSqr.toDouble())).toInt() + sqrs * sqrs
-        countOfAllNum = digitNumber(res)
-        sqrs += 1
-    }
-    return if (countOfAllNum == n) res % 10
-    else (res % (pow(10.0, (countOfAllNum - n + 1.0)).toInt())) / 10
-}
-*/
 
 /**
  * Сложная
@@ -294,10 +266,11 @@ fun squareSequenceDigit(n: Int): Int {
 fun fibSequenceDigit(n: Int): Int {
     var str: String
     var result = StringBuilder()
+    val translateTNumber = 48
     for (i in 1..n) {
         str = fib(i).toString()
         result.append(str)
     }
-    return ((result[n-1]).toInt() - 48)
+    return (result[n-1]).toInt() - translateTNumber
 
 }

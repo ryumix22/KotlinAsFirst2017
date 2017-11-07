@@ -41,7 +41,7 @@ fun timeSecondsToStr(seconds: Int): String {
 /**
  * Пример: консольный ввод
  */
-fun main(args: Array<String>) {
+fun man(args: Array<String>) {
     println("Введите время в формате ЧЧ:ММ:СС")
     val line = readLine()
     if (line != null) {
@@ -69,14 +69,13 @@ fun main(args: Array<String>) {
 
 fun dateStrToDigit(str: String): String {
     val date = str.split(" ")
-    var addNull = ""
+    var addNull: String
     val list = listOf("января", "февраля", "марта", "апреля", "мая", "июня", "июля",
             "августа", "сентября", "октября", "ноября", "декабря")
     var listWithDate = mutableListOf<String>()
     try {
-        for (part in date) {
-            listWithDate.add(part)
-        }
+        listWithDate.addAll(date)
+        listWithDate[2] = listWithDate[2].toInt().toString()
         listWithDate[1] = (list.indexOf(listWithDate[1]) + 1).toString()
         if (listWithDate[1] == "0") return ""
         val dateNumber = listWithDate[0]
@@ -96,6 +95,9 @@ fun dateStrToDigit(str: String): String {
     }
 }
 
+fun main(args: Array<String>) {
+    println(dateStrToDigit("12 июня ааа"))
+}
 /**
  * Средняя
  *
@@ -153,7 +155,6 @@ fun bestHighJump(jumps: String): Int = TODO()
  * Про нарушении формата входной строки бросить исключение IllegalArgumentException
  */
 fun plusMinus(expression: String): Int {
-    var number = 0
     val numbers = expression.split(" ")
     val list = mutableListOf<String>()
     try {
@@ -161,12 +162,12 @@ fun plusMinus(expression: String): Int {
             list.add(part)
         }
         var sum = list[0].toInt()
-        for (i in 0 until list.size - 1) {
-            if (i % 2 != 0) when {
-                    (list[i] == "+") -> sum += list[i + 1].toInt()
-                    (list[i] == "-") -> sum -= list[i + 1].toInt()
-                }
+        for (i in 1 until list.size - 1 step 2) {
+            when {
+                (list[i] == "+") -> sum += list[i + 1].toInt()
+                (list[i] == "-") -> sum -= list[i + 1].toInt()
             }
+        }
         return sum
         }
      catch (e:NumberFormatException) {
