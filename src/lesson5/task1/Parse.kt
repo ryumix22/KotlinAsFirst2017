@@ -41,7 +41,7 @@ fun timeSecondsToStr(seconds: Int): String {
 /**
  * Пример: консольный ввод
  */
-fun man(args: Array<String>) {
+fun main(args: Array<String>) {
     println("Введите время в формате ЧЧ:ММ:СС")
     val line = readLine()
     if (line != null) {
@@ -72,32 +72,17 @@ fun dateStrToDigit(str: String): String {
     var addNull: String
     val list = listOf("января", "февраля", "марта", "апреля", "мая", "июня", "июля",
             "августа", "сентября", "октября", "ноября", "декабря")
-    var listWithDate = mutableListOf<String>()
-    try {
-        listWithDate.addAll(date)
-        listWithDate[2] = listWithDate[2].toInt().toString()
-        listWithDate[1] = (list.indexOf(listWithDate[1]) + 1).toString()
-        if (listWithDate[1] == "0") return ""
-        val dateNumber = listWithDate[0]
-        if (dateNumber[0] == '0') listWithDate[0] = listWithDate[0].substring(1, listWithDate[0].length)
-        for (i in 0 until listWithDate.size - 1) {
-            addNull = listWithDate[i]
-            if (listWithDate[i].toInt() in 0..9) listWithDate[i] = "0$addNull"
-            else listWithDate[i] = addNull
-        }
-        return listWithDate.joinToString(separator = ".")
-    }
-    catch (e: NumberFormatException) {
-        return ""
-    }
-    catch (a: IndexOutOfBoundsException){
-        return ""
+    return try {
+        if (date[1] in list) {
+            String.format("%02d.%02d.%4d", date[0].toInt(), (list.indexOf(date[1]) + 1), date[2].toInt())
+        } else ""
+    } catch (e: NumberFormatException) {
+        ""
+    } catch (a: IndexOutOfBoundsException){
+        ""
     }
 }
 
-fun main(args: Array<String>) {
-    println(dateStrToDigit("12 июня ааа"))
-}
 /**
  * Средняя
  *
@@ -156,16 +141,12 @@ fun bestHighJump(jumps: String): Int = TODO()
  */
 fun plusMinus(expression: String): Int {
     val numbers = expression.split(" ")
-    val list = mutableListOf<String>()
     try {
-        for (part in numbers) {
-            list.add(part)
-        }
-        var sum = list[0].toInt()
-        for (i in 1 until list.size - 1 step 2) {
+        var sum = numbers[0].toInt()
+        for (i in 1 until numbers.size - 1 step 2) {
             when {
-                (list[i] == "+") -> sum += list[i + 1].toInt()
-                (list[i] == "-") -> sum -= list[i + 1].toInt()
+                (numbers[i] == "+") -> sum += numbers[i + 1].toInt()
+                (numbers[i] == "-") -> sum -= numbers[i + 1].toInt()
             }
         }
         return sum
