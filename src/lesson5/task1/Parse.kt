@@ -73,8 +73,9 @@ fun dateStrToDigit(str: String): String {
     val list = listOf("января", "февраля", "марта", "апреля", "мая", "июня", "июля",
             "августа", "сентября", "октября", "ноября", "декабря")
     return try {
+        val a= date[2].length
         if (date[1] in list) {
-            String.format("%02d.%02d.%4d", date[0].toInt(), (list.indexOf(date[1]) + 1), date[2].toInt())
+            String.format("%02d.%02d.%d", date[0].toInt(), (list.indexOf(date[1]) + 1), date[2].toInt())
         } else ""
     } catch (e: NumberFormatException) {
         ""
@@ -90,7 +91,21 @@ fun dateStrToDigit(str: String): String {
  * Перевести её в строковый формат вида "15 июля 2016".
  * При неверном формате входной строки вернуть пустую строку
  */
-fun dateDigitToStr(digital: String): String = TODO()
+fun dateDigitToStr(digital: String): String {
+    val date = digital.split(".")
+    val list = listOf("января", "февраля", "марта", "апреля", "мая", "июня", "июля",
+            "августа", "сентября", "октября", "ноября", "декабря")
+    return try {
+        if (date.size != 3) ""
+        else
+            String.format("%d %s %d", date[0].toInt(), list[date[1].toInt() - 1], date[2].toInt())
+    } catch (e: NumberFormatException) {
+        ""
+    } catch (a: IndexOutOfBoundsException) {
+        ""
+    }
+}
+
 
 /**
  * Средняя
