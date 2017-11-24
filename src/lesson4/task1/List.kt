@@ -197,13 +197,17 @@ fun accumulate(list: MutableList<Double>): MutableList<Double> {
 fun factorize(n: Int): List<Int> {
     val result = mutableListOf<Int>()
     var number = n
+    var ourNubmer = 1
     for (i in 2..ceil(sqrt(n.toDouble())).toInt())
         while (number % i == 0 && isPrime(i)){
             result.add(i)
             number /= i
         }
-    return if (result.isEmpty()) listOf(n) else
+    for (element in result) ourNubmer *= element
+    return if (ourNubmer == n) result else {
+        result.add(n / ourNubmer)
         result
+    }
 }
 
 /**
@@ -225,12 +229,14 @@ fun convert(n: Int, base: Int): List<Int> {
     val result = mutableListOf<Int>()
     var number = n
     var count = 0
-    while (number != 0) {
-        count = number % base
-        result.add(0, count)
-        number /= base
+    return if (n == 0) listOf(0) else {
+        while (number != 0) {
+            count = number % base
+            result.add(0, count)
+            number /= base
+        }
+        result
     }
-     return result
 }
 
 /**
@@ -246,6 +252,7 @@ fun convertToString(n: Int, base: Int): String {
     var result = StringBuilder()
     var element: String
     val translateToNumber = "87".toInt()
+    if (n == 0) return "0"
     for (i in 0 until list.size) {
         element = if (list[i] > 9) ((translateToNumber + list[i]).toChar()).toString()
         else list[i].toString()
