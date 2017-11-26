@@ -305,4 +305,47 @@ fun roman(n: Int): String = TODO()
  * Например, 375 = "триста семьдесят пять",
  * 23964 = "двадцать три тысячи девятьсот шестьдесят четыре"
  */
-fun russian(n: Int): String = TODO()
+val hundredsList = listOf("", " сто", " двести", " триста",
+        " четыреста", " пятьсот", " шестьсот",
+        " семьсот", " восемьсот", " девятьсот")
+val tensList = listOf("", " десять", " двадцать", " тридцать",
+        " сорок", " пятьдесят", " шестьдесят",
+        " семьдесят", " восемьдесят", " девяносто")
+var forThousands = listOf("", " одна", " две", " три",
+        " четыре", " пять", " шесть",
+        " семь", " восемь", " девять")
+var forHundreds = listOf("", " один", " два", " три",
+        " четыре", " пять", " шесть",
+        " семь", " восемь", " девять")
+val anotherTensList = listOf(" десять", " одиннадцать", " двенадцать", " тринадцать",
+        " четырнадцать", " пятнадцать", " шестнадцать",
+        " семнадцать", " восемнадцать", " девятнадцать")
+val thousandsList = listOf(" тысяча", " тысячи", " тысяч")
+
+fun translateToNumber(n: Int, lastLetter: Int): String {
+    var result = ""
+
+    result += hundredsList[n / 100 % 10]
+    if ((n / 10 % 10) == 1) result += anotherTensList[n % 10] else {
+        result += tensList[n / 10 % 10]
+        if (lastLetter == 0) result += forThousands[n % 10] else
+            result += forHundreds[n % 10]
+    }
+    return result
+}
+
+fun russian(n: Int): String {
+    var result = ""
+    result += translateToNumber(n / 1000, 0)
+    var firstThreeNumber = n / 1000
+    if (n / 1000 > 0) {
+        when {
+            ((firstThreeNumber % 10 == 1) && (firstThreeNumber % 100 != 11)) -> result += thousandsList[0]
+            ((firstThreeNumber % 10 in 2..4) && (firstThreeNumber % 100 !in 12..14)) -> result += thousandsList[1]
+            ((firstThreeNumber % 10 in 5..9) || (firstThreeNumber % 100 in 11..19) ||
+                    (firstThreeNumber % 10 == 0)) -> result += thousandsList[2]
+        }
+    }
+    result += translateToNumber(n % 1000, 1)
+    return result.trim()
+}
