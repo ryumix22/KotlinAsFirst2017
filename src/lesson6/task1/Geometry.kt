@@ -108,7 +108,7 @@ fun diameter(vararg points: Point): Segment {
     var maxDistance = 0.0
     var segment = Segment(list[0], list[1])
     if (list.size < 2) throw IllegalArgumentException()
-    for (j in 0 until list.size - 2) {
+    for (j in 0 until list.size - 1) {
         for (i in j + 1 until list.size)
             if (list[j].distance(list[i]) > maxDistance) {
                 maxDistance = list[j].distance(list[i])
@@ -188,7 +188,7 @@ fun lineByPoints(a: Point, b: Point): Line = lineBySegment(Segment(a, b))
  */
 fun bisectorByPoints(a: Point, b: Point): Line {
     val center = Point(((a.x + b.x) / 2), ((a.y + b.y) / 2))
-    val angle = asin((b.y - a.y) / a.distance(b))
+    val angle = atan((b.y - a.y) / (b.x - a.x))
     return if (angle >= PI / 2) Line(center, angle - PI / 2)
     else Line(center, angle + PI / 2)
 }
