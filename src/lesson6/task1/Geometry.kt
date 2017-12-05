@@ -125,12 +125,11 @@ fun diameter(vararg points: Point): Segment {
  * Центр её должен находиться посередине между точками, а радиус составлять половину расстояния между ними
  */
 fun circleByDiameter(diameter: Segment): Circle {
-    val centreX = (diameter.begin.x + diameter.begin.y) / 2
-    val centreY = (diameter.end.x + diameter.end.y) / 2
+    val centreX = (diameter.begin.x + diameter.end.x) / 2
+    val centreY = (diameter.begin.y + diameter.end.y) / 2
     val centre = Point(centreX, centreY)
     val radiusNew = centre.distance(diameter.end)
     return Circle(centre, radiusNew)
-
 }
 
 /**
@@ -171,8 +170,7 @@ class Line private constructor(val b: Double, val angle: Double) {
  * Построить прямую по отрезку
  */
 fun lineBySegment(s: Segment): Line {
-    val segment = s.begin.distance(s.end)
-    val angle = asin((s.end.y - s.begin.y) / segment)
+    val angle = atan((s.end.y - s.begin.y) / (s.end.x - s.begin.x))
     return Line(s.end, angle)
 }
 
@@ -190,8 +188,9 @@ fun lineByPoints(a: Point, b: Point): Line = lineBySegment(Segment(a, b))
  */
 fun bisectorByPoints(a: Point, b: Point): Line {
     val center = Point(((a.x + b.x) / 2), ((a.y + b.y) / 2))
-    val angle = asin((b.y - a.y) / a.distance(b)) + PI / 2
-    return Line(center, angle)
+    val angle = asin((b.y - a.y) / a.distance(b))
+    return if (angle >= PI / 2) Line(center, angle - PI / 2)
+    else Line(center, angle + PI / 2)
 }
 
 /**
