@@ -2,6 +2,7 @@
 package lesson6.task1
 
 import lesson1.task1.sqr
+import java.lang.Math.*
 
 /**
  * Точка на плоскости
@@ -107,7 +108,7 @@ fun diameter(vararg points: Point): Segment {
     var maxDistance = 0.0
     var segment = Segment(list[0], list[1])
     if (list.size < 2) throw IllegalArgumentException()
-    for (j in 0 until list.size - 1) {
+    for (j in 0 until list.size - 2) {
         for (i in j + 1 until list.size)
             if (list[j].distance(list[i]) > maxDistance) {
                 maxDistance = list[j].distance(list[i])
@@ -128,8 +129,8 @@ fun circleByDiameter(diameter: Segment): Circle {
     val centreY = (diameter.end.x + diameter.end.y) / 2
     val centre = Point(centreX, centreY)
     val radiusNew = centre.distance(diameter.end)
-    val circle = Circle(centre, radiusNew)
-    return circle
+    return Circle(centre, radiusNew)
+
 }
 
 /**
@@ -143,7 +144,7 @@ class Line private constructor(val b: Double, val angle: Double) {
         assert(angle >= 0 && angle < Math.PI) { "Incorrect line angle: $angle" }
     }
 
-    constructor(point: Point, angle: Double): this(point.y * Math.cos(angle) - point.x * Math.sin(angle), angle)
+    constructor(point: Point, angle: Double): this(point.y * cos(angle) - point.x * Math.sin(angle), angle)
 
     /**
      * Средняя
@@ -161,7 +162,7 @@ class Line private constructor(val b: Double, val angle: Double) {
         return result
     }
 
-    override fun toString() = "Line(${Math.cos(angle)} * y = ${Math.sin(angle)} * x + $b)"
+    override fun toString() = "Line(${cos(angle)} * y = ${Math.sin(angle)} * x + $b)"
 }
 
 /**
@@ -169,21 +170,29 @@ class Line private constructor(val b: Double, val angle: Double) {
  *
  * Построить прямую по отрезку
  */
-fun lineBySegment(s: Segment): Line = TODO()
+fun lineBySegment(s: Segment): Line {
+    val segment = s.begin.distance(s.end)
+    val angle = asin((s.end.y - s.begin.y) / segment)
+    return Line(s.end, angle)
+}
 
 /**
  * Средняя
  *
  * Построить прямую по двум точкам
  */
-fun lineByPoints(a: Point, b: Point): Line = TODO()
+fun lineByPoints(a: Point, b: Point): Line = lineBySegment(Segment(a, b))
 
 /**
  * Сложная
  *
  * Построить серединный перпендикуляр по отрезку или по двум точкам
  */
-fun bisectorByPoints(a: Point, b: Point): Line = TODO()
+fun bisectorByPoints(a: Point, b: Point): Line {
+    val center = Point(((a.x + b.x) / 2), ((a.y + b.y) / 2))
+    val angle = asin((b.y - a.y) / a.distance(b)) + PI / 2
+    return Line(center, angle)
+}
 
 /**
  * Средняя
@@ -191,7 +200,20 @@ fun bisectorByPoints(a: Point, b: Point): Line = TODO()
  * Задан список из n окружностей на плоскости. Найти пару наименее удалённых из них.
  * Если в списке менее двух окружностей, бросить IllegalArgumentException
  */
-fun findNearestCirclePair(vararg circles: Circle): Pair<Circle, Circle> = TODO()
+fun findNearestCirclePair(vararg circles: Circle): Pair<Circle, Circle> {
+    val list = (circles.toList())
+    if (list.size < 2) throw IllegalArgumentException()
+    var maxDistance = list[0].distance(list[1])
+    var pair = Pair(list[0], list[1])
+    for (j in 0 until list.size - 1) {
+        for (i in j + 1 until list.size)
+            if (list[j].distance(list[i]) < maxDistance) {
+                maxDistance = list[j].distance(list[i])
+                pair = Pair(list[j], list[i])
+            }
+    }
+    return pair
+}
 
 /**
  * Сложная
