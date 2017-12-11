@@ -199,7 +199,7 @@ fun factorize(n: Int): List<Int> {
     var number = n
     var ourNubmer = 1
     for (i in 2..ceil(sqrt(n.toDouble())).toInt())
-        while (number % i == 0 && isPrime(i)){
+        while (number % i == 0){
             result.add(i)
             number /= i
         }
@@ -251,7 +251,7 @@ fun convertToString(n: Int, base: Int): String {
     val list = convert(n, base)
     var result = StringBuilder()
     var element: String
-    val translateToNumber = "87".toInt()
+    val translateToNumber = 'a'.toInt()-10
     if (n == 0) return "0"
     for (i in 0 until list.size) {
         element = if (list[i] > 9) ((translateToNumber + list[i]).toChar()).toString()
@@ -322,30 +322,32 @@ val anotherTensList = listOf(" десять", " одиннадцать", " дв�
         " семнадцать", " восемнадцать", " девятнадцать")
 val thousandsList = listOf(" тысяча", " тысячи", " тысяч")
 
-fun translateToNumber(n: Int, lastLetter: Int): String {
-    var result = ""
+fun translateToNumber(n: Int, lastLetter: Boolean): String {
+    var result = StringBuilder()
 
-    result += hundredsList[n / 100 % 10]
-    if ((n / 10 % 10) == 1) result += anotherTensList[n % 10] else {
-        result += tensList[n / 10 % 10]
-        if (lastLetter == 0) result += forThousands[n % 10] else
-            result += forHundreds[n % 10]
+    result.append(hundredsList[n / 100])
+    if ((n / 10 % 10) == 1) result.append(anotherTensList[n % 10]) else {
+        result.append(tensList[n / 10 % 10])
+        if (lastLetter) result.append(forThousands[n % 10]) else
+            result.append(forHundreds[n % 10])
     }
-    return result
+    return result.toString()
 }
 
 fun russian(n: Int): String {
-    var result = ""
-    result += translateToNumber(n / 1000, 0)
+    var result = StringBuilder()
     var firstThreeNumber = n / 1000
-    if (n / 1000 > 0) {
+    if (firstThreeNumber > 0) {
+        result.append(translateToNumber(n / 1000, true))
         when {
-            ((firstThreeNumber % 10 == 1) && (firstThreeNumber % 100 != 11)) -> result += thousandsList[0]
-            ((firstThreeNumber % 10 in 2..4) && (firstThreeNumber % 100 !in 12..14)) -> result += thousandsList[1]
+            ((firstThreeNumber % 10 == 1) && (firstThreeNumber % 100 != 11)) ->
+                result.append(thousandsList[0])
+            ((firstThreeNumber % 10 in 2..4) && (firstThreeNumber % 100 !in 12..14)) ->
+                result.append(thousandsList[1])
             ((firstThreeNumber % 10 in 5..9) || (firstThreeNumber % 100 in 11..19) ||
-                    (firstThreeNumber % 10 == 0)) -> result += thousandsList[2]
+                    (firstThreeNumber % 10 == 0)) -> result.append(thousandsList[2])
         }
     }
-    result += translateToNumber(n % 1000, 1)
-    return result.trim()
+    result.append(translateToNumber(n % 1000, false))
+    return result.trim().toString()
 }

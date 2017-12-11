@@ -244,15 +244,27 @@ fun hasDifferentDigits(n: Int): Boolean {
  * 149162536496481100121144...
  * Например, 2-я цифра равна 4, 7-я 5, 12-я 6.
  */
-fun squareSequenceDigit(n: Int): Int {
-    var str: String
-    var result = StringBuilder()
-    val translateTNumber = 48
-    for (i in 1..n) {
-        str = (i * i).toString()
-        result.append(str)
+fun pos(n: Int, position: Int): Int {
+    var i = 1
+    var number = n
+    while (i != position) {
+        number /= 10
+        i++
     }
-    return (result[n-1]).toInt() - translateTNumber
+    return number % 10
+}
+fun squareSequenceDigit(n: Int): Int {
+    var numbers = 0
+    var sumOfNumbers = 0
+    var i = 1
+    while (sumOfNumbers < n) {
+        numbers = i * i
+        sumOfNumbers += digitNumber(numbers)
+        i++
+    }
+    return if (sumOfNumbers > n) pos(numbers, sumOfNumbers - n + 1)  else
+        numbers % 10
+
 }
 
 /**
@@ -263,13 +275,21 @@ fun squareSequenceDigit(n: Int): Int {
  * Например, 2-я цифра равна 1, 9-я 2, 14-я 5.
  */
 fun fibSequenceDigit(n: Int): Int {
-    var str: String
-    var result = StringBuilder()
-    val translateTNumber = 48
-    for (i in 1..n) {
+    var numbers = 0
+    var sumOfNumbers = 0
+    var i = 1
+    while (sumOfNumbers < n) {
+        numbers = fib(i)
+        sumOfNumbers += digitNumber(numbers)
+        i++
+    }
+    return if (sumOfNumbers > n) pos(numbers, sumOfNumbers - n + 1)  else
+        numbers % 10
+
+}
+    /*for (i in 1..n) {
         str = fib(i).toString()
         result.append(str)
     }
     return (result[n-1]).toInt() - translateTNumber
-
-}
+*/

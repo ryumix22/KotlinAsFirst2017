@@ -41,7 +41,7 @@ fun timeSecondsToStr(seconds: Int): String {
 /**
  * Пример: консольный ввод
  */
-fun man(args: Array<String>) {
+fun main(args: Array<String>) {
     println("Введите время в формате ЧЧ:ММ:СС")
     val line = readLine()
     if (line != null) {
@@ -73,9 +73,9 @@ fun dateStrToDigit(str: String): String {
     val list = listOf("января", "февраля", "марта", "апреля", "мая", "июня", "июля",
             "августа", "сентября", "октября", "ноября", "декабря")
     return try {
-        val a= date[2].length
         if (date[1] in list) {
-            String.format("%02d.%02d.%d", date[0].toInt(), (list.indexOf(date[1]) + 1), date[2].toInt())
+            String.format("%02d.%02d.%d", date[0].toInt(),
+                    (list.indexOf(date[1]) + 1), date[2].toInt())
         } else ""
     } catch (e: NumberFormatException) {
         ""

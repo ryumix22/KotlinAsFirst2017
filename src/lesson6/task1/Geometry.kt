@@ -170,7 +170,8 @@ class Line private constructor(val b: Double, val angle: Double) {
  * Построить прямую по отрезку
  */
 fun lineBySegment(s: Segment): Line {
-    val angle = atan((s.end.y - s.begin.y) / (s.end.x - s.begin.x))
+    val angle = if (s.end.x != s.begin.x) atan((s.end.y - s.begin.y) / (s.end.x - s.begin.x))
+    else PI / 2
     return Line(s.end, angle)
 }
 
@@ -188,7 +189,8 @@ fun lineByPoints(a: Point, b: Point): Line = lineBySegment(Segment(a, b))
  */
 fun bisectorByPoints(a: Point, b: Point): Line {
     val center = Point(((a.x + b.x) / 2), ((a.y + b.y) / 2))
-    val angle = atan((b.y - a.y) / (b.x - a.x))
+    val angle = if (b.x != a.x) atan((b.y - a.y) / (b.x - a.x))
+    else PI / 2
     return if (angle >= PI / 2) Line(center, angle - PI / 2)
     else Line(center, angle + PI / 2)
 }
@@ -200,7 +202,7 @@ fun bisectorByPoints(a: Point, b: Point): Line {
  * Если в списке менее двух окружностей, бросить IllegalArgumentException
  */
 fun findNearestCirclePair(vararg circles: Circle): Pair<Circle, Circle> {
-    val list = (circles.toList())
+    val list = circles.toList()
     if (list.size < 2) throw IllegalArgumentException()
     var maxDistance = list[0].distance(list[1])
     var pair = Pair(list[0], list[1])
