@@ -34,7 +34,7 @@ data class Square(val column: Int, val row: Int) {
 fun square(notation: String): Square {
     val newColumn = notation[0].toInt() - ('a'.toInt() - 1)
     val newRow = (notation[1].toString()).toInt()
-    if (newColumn !in 1..8 && newRow !in 1..8) throw IllegalArgumentException()
+    if (newColumn !in 1..8 || newRow !in 1..8) throw IllegalArgumentException()
     return Square(newColumn, newRow)
 }
 
@@ -62,7 +62,7 @@ fun square(notation: String): Square {
  * Ладья может пройти через клетку (3, 3) или через клетку (6, 1) к клетке (6, 3).
  */
 fun rookMoveNumber(start: Square, end: Square): Int {
-    if (!start.inside() && !end.inside()) throw IllegalArgumentException()
+    if (!start.inside() || !end.inside()) throw IllegalArgumentException()
    return when {
        start.column == end.column && start.row == end.row -> 0
        start.column == end.column || start.row == end.row -> 1
@@ -85,7 +85,7 @@ fun rookMoveNumber(start: Square, end: Square): Int {
  * Если возможно несколько вариантов самой быстрой траектории, вернуть любой из них.
  */
 fun rookTrajectory(start: Square, end: Square): List<Square> {
-    if (!start.inside() && !end.inside()) throw IllegalArgumentException()
+    if (!start.inside() || !end.inside()) throw IllegalArgumentException()
     return when {
         start.column == end.column && start.row == end.row -> listOf(start)
         start.column == end.column || start.row == end.row ->
@@ -123,7 +123,7 @@ fun color(square: Square): Boolean { //true - black, false - white
 }
 
 fun bishopMoveNumber(start: Square, end: Square): Int {
-    if (!start.inside() && !end.inside()) throw IllegalArgumentException()
+    if (!start.inside() || !end.inside()) throw IllegalArgumentException()
     return when {
         color(start) != color(end)-> -1
         start.column - end.column == start.row - end.row && start.column - end.column != 0 -> 1
