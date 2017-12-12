@@ -1,6 +1,8 @@
 @file:Suppress("UNUSED_PARAMETER")
 package lesson6.task2
 
+import java.lang.Math.abs
+
 /**
  * Клетка шахматной доски. Шахматная доска квадратная и имеет 8 х 8 клеток.
  * Поэтому, обе координаты клетки (горизонталь row, вертикаль column) могут находиться в пределах от 1 до 8.
@@ -123,10 +125,10 @@ fun color(square: Square): Boolean { //true - black, false - white
 }
 
 fun bishopMoveNumber(start: Square, end: Square): Int {
-    if (!start.inside() || !end.inside()) throw IllegalArgumentException()
+    if (!(start.inside() || end.inside())) throw IllegalArgumentException()
     return when {
         color(start) != color(end)-> -1
-        start.column - end.column == start.row - end.row && start.column - end.column != 0 -> 1
+        abs(start.column - end.column) == abs(start.row - end.row) && start.column - end.column != 0 -> 1
         start.column == end.column && start.row == end.row -> 0
         else -> 2
     }
