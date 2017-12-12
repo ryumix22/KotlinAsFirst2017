@@ -36,7 +36,7 @@ data class Square(val column: Int, val row: Int) {
 fun square(notation: String): Square {
     val newColumn = notation[0].toInt() - ('a'.toInt() - 1)
     val newRow = (notation[1].toString()).toInt()
-    if (newColumn !in 1..8 || newRow !in 1..8) throw IllegalArgumentException()
+    if (!notation.matches(Regex("""[a-h][1-8]"""))) throw IllegalArgumentException()
     return Square(newColumn, newRow)
 }
 
@@ -125,7 +125,7 @@ fun color(square: Square): Boolean { //true - black, false - white
 }
 
 fun bishopMoveNumber(start: Square, end: Square): Int {
-    if (!(start.inside() || end.inside())) throw IllegalArgumentException()
+    if (!start.inside() || !end.inside()) throw IllegalArgumentException()
     return when {
         color(start) != color(end)-> -1
         abs(start.column - end.column) == abs(start.row - end.row) && start.column - end.column != 0 -> 1
