@@ -174,7 +174,22 @@ fun bishopTrajectory(start: Square, end: Square): List<Square> = TODO()
  * Пример: kingMoveNumber(Square(3, 1), Square(6, 3)) = 3.
  * Король может последовательно пройти через клетки (4, 2) и (5, 2) к клетке (6, 3).
  */
-fun kingMoveNumber(start: Square, end: Square): Int = TODO()
+fun line(start: Square, end: Square):Int {
+    var posRow = start.row
+    var numberOfSteps = 0
+    while (abs(end.row - posRow) != abs(start.column - end.column)) {
+        posRow --
+        numberOfSteps ++
+    }
+    return numberOfSteps
+}
+fun kingMoveNumber(start: Square, end: Square): Int {
+    if (!start.inside() || !end.inside()) throw IllegalArgumentException()
+    val numberOfSteps = line(start, end)
+    return if (start.column == end.column && start.row == end.row) 0 else
+        if (start.row == end.row || start.column == end.column) numberOfSteps else
+        numberOfSteps + abs(start.column - end.column)
+}
 
 /**
  * Сложная
@@ -190,7 +205,44 @@ fun kingMoveNumber(start: Square, end: Square): Int = TODO()
  *          kingTrajectory(Square(3, 5), Square(6, 2)) = listOf(Square(3, 5), Square(4, 4), Square(5, 3), Square(6, 2))
  * Если возможно несколько вариантов самой быстрой траектории, вернуть любой из них.
  */
-fun kingTrajectory(start: Square, end: Square): List<Square> = TODO()
+fun kingTrajectory(start: Square, end: Square): List<Square> {
+    var steps = 0
+    val list = mutableListOf(start)
+    if (start == end) return listOf(start) else {
+        while (line(start, end) != steps) {
+            if (start.column < end.column) list.add(Square(start.column + 1, start.row)) else
+                list.add(Square(start.column - 1, start.row))
+            steps++
+        }
+        var locationRaw = list[list.size].row
+        var locationColumn = list[list.size].column
+        if (end.row > locationRaw) if (end.column > locationColumn)
+            while (Square(locationColumn, locationRaw) != end) {
+                locationColumn++
+                locationRaw++
+                list.add(Square(locationColumn, locationRaw))
+            }
+        else while (Square(locationColumn, locationRaw) != end) {
+            locationColumn--
+            locationRaw++
+            list.add(Square(locationColumn, locationRaw))
+        }
+        else if (end.column > locationColumn)
+            while (Square(locationColumn, locationRaw) != end) {
+                locationColumn++
+                locationRaw--
+                list.add(Square(locationColumn, locationRaw))
+            }
+        else while (Square(locationColumn, locationRaw) != end) {
+            locationColumn--
+            locationRaw--
+            list.add(Square(locationColumn, locationRaw))
+        }
+        val listkek = list.toTypedArray()
+        val listkekek = listkek.toList()
+        return listkekek
+    }
+}
 
 /**
  * Сложная
