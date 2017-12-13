@@ -152,7 +152,24 @@ fun bishopMoveNumber(start: Square, end: Square): Int {
  *          bishopTrajectory(Square(1, 3), Square(6, 8)) = listOf(Square(1, 3), Square(6, 8))
  * Если возможно несколько вариантов самой быстрой траектории, вернуть любой из них.
  */
-fun bishopTrajectory(start: Square, end: Square): List<Square> = TODO()
+fun bishopTrajectory(start: Square, end: Square): List<Square> {
+    if (!start.inside() || !end.inside()) throw IllegalArgumentException()
+    val list = listOf(start)
+    when {
+        color(start) != color(end) -> return listOf()
+        start == end -> return list
+        (abs(start.column - end.column) == abs(start.row - end.row)) -> return listOf(start, end)
+        else ->
+            for (locationColumn in 1..8) {
+                for (locationRaw in 1..8) {
+                    if (abs(locationRaw - end.row) == abs(locationColumn - end.column) &&
+                            abs(locationRaw - start.row) == abs(locationColumn - start.column))
+                        return listOf(start, Square(locationColumn, locationRaw), end)
+                }
+            }
+    }
+    return listOf()
+}
 
 /**
  * Средняя
@@ -174,21 +191,15 @@ fun bishopTrajectory(start: Square, end: Square): List<Square> = TODO()
  * Пример: kingMoveNumber(Square(3, 1), Square(6, 3)) = 3.
  * Король может последовательно пройти через клетки (4, 2) и (5, 2) к клетке (6, 3).
  */
-fun line(start: Square, end: Square):Int {
-    var posRow = start.row
-    var numberOfSteps = 0
-    while (abs(end.row - posRow) != abs(start.column - end.column)) {
-        posRow --
-        numberOfSteps ++
-    }
-    return numberOfSteps
-}
+
 fun kingMoveNumber(start: Square, end: Square): Int {
     if (!start.inside() || !end.inside()) throw IllegalArgumentException()
-    val numberOfSteps = line(start, end)
-    return if (start.column == end.column && start.row == end.row) 0 else
-        if (start.row == end.row || start.column == end.column) numberOfSteps else
-        numberOfSteps + abs(start.column - end.column)
+    val distanceRow = abs(start.row - end.row)
+    val distanceColumn = abs(start.column - end.column)
+    return when {
+        (distanceColumn <= distanceRow) -> distanceRow
+        else -> distanceColumn
+    }
 }
 
 /**
@@ -206,42 +217,54 @@ fun kingMoveNumber(start: Square, end: Square): Int {
  * Если возможно несколько вариантов самой быстрой траектории, вернуть любой из них.
  */
 fun kingTrajectory(start: Square, end: Square): List<Square> {
-    var steps = 0
+    if (!start.inside() || !end.inside()) throw IllegalArgumentException()
     val list = mutableListOf(start)
-    if (start == end) return listOf(start) else {
-        while (line(start, end) != steps) {
-            if (start.column < end.column) list.add(Square(start.column + 1, start.row)) else
-                list.add(Square(start.column - 1, start.row))
-            steps++
-        }
-        var locationRaw = list[list.size].row
-        var locationColumn = list[list.size].column
-        if (end.row > locationRaw) if (end.column > locationColumn)
-            while (Square(locationColumn, locationRaw) != end) {
-                locationColumn++
-                locationRaw++
-                list.add(Square(locationColumn, locationRaw))
+    var locationColumn = start.column
+    var locationRaw = start.row
+    if (start == end) return listOf(start) else
+        while (abs(locationRaw - end.row) != abs(locationColumn - end.column)) {
+            when {
+                abs(start.row - end.row) > abs(start.column - end.column) ->
+                    if (end.row > start.row) {
+                        locationRaw++
+                        list.add(Square(locationColumn, locationRaw))
+                    } else {
+                        locationRaw--
+                        list.add(Square(locationColumn, locationRaw))
+                    }
+                abs(start.row - end.row) < abs(start.column - end.column) ->
+                    if (end.column > start.column) {
+                        locationColumn++
+                        list.add(Square(locationColumn, locationRaw))
+                    } else {
+                        locationColumn--
+                        list.add(Square(locationColumn, locationRaw))
+                    }
             }
-        else while (Square(locationColumn, locationRaw) != end) {
+        }
+    while (Square(locationColumn, locationRaw) != end) {
+        if (end.row > start.row) if (end.column > start.column) {
+            locationColumn++
+            locationRaw++
+            list.add(Square(locationColumn, locationRaw))
+        } else {
             locationColumn--
             locationRaw++
             list.add(Square(locationColumn, locationRaw))
         }
-        else if (end.column > locationColumn)
-            while (Square(locationColumn, locationRaw) != end) {
-                locationColumn++
-                locationRaw--
-                list.add(Square(locationColumn, locationRaw))
-            }
-        else while (Square(locationColumn, locationRaw) != end) {
+        else if (end.column > start.column) {
+            locationColumn++
+            locationRaw--
+            list.add(Square(locationColumn, locationRaw))
+        } else {
             locationColumn--
             locationRaw--
             list.add(Square(locationColumn, locationRaw))
         }
-        val listkek = list.toTypedArray()
-        val listkekek = listkek.toList()
-        return listkekek
     }
+    val intermediateList = list.toTypedArray()
+    val result = intermediateList.toList()
+    return result
 }
 
 /**
