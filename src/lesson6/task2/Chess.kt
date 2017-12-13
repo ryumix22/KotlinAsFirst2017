@@ -262,9 +262,7 @@ fun kingTrajectory(start: Square, end: Square): List<Square> {
             list.add(Square(locationColumn, locationRaw))
         }
     }
-    val intermediateList = list.toTypedArray()
-    val result = intermediateList.toList()
-    return result
+    return list.toList()
 }
 
 /**
