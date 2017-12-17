@@ -2,6 +2,7 @@
 package lesson7.task2
 
 import lesson7.task1.Matrix
+import lesson7.task1.MatrixImpl
 import lesson7.task1.createMatrix
 
 // Все задачи в этом файле требуют наличия реализации интерфейса "Матрица" в Matrix.kt
@@ -103,8 +104,16 @@ fun generateSnake(height: Int, width: Int): Matrix<Int> = TODO()
  * 4 5 6      8 5 2
  * 7 8 9      9 6 3
  */
-fun <E> rotate(matrix: Matrix<E>): Matrix<E> = TODO()
-
+fun <E> rotate(matrix: Matrix<E>): Matrix<E> {
+    if (matrix.width < 1 || matrix.height < 1) return matrix
+    val result = createMatrix(matrix.width, matrix.height, matrix[0, 0])
+    for (i in 0 until matrix.height) {
+        for (j in 0 until matrix.width) {
+            result[i, j] = matrix[matrix.width - 1 - j, i]
+        }
+    }
+    return result
+}
 /**
  * Сложная
  *
@@ -118,7 +127,21 @@ fun <E> rotate(matrix: Matrix<E>): Matrix<E> = TODO()
  * 1 2 3
  * 3 1 2
  */
-fun isLatinSquare(matrix: Matrix<Int>): Boolean = TODO()
+fun isLatinSquare(matrix: Matrix<Int>): Boolean {
+    if (matrix.width < 1 || matrix.height < 1) throw IllegalArgumentException()
+    for (i in 0 until matrix.height) {
+        var listColumn = listOf<Int>()
+        var listRow = listOf<Int>()
+        for (j in 0 until matrix.width) {
+            listColumn += matrix[j, i]
+            listRow += matrix[i, j]
+        }
+        for (k in 1..matrix.width) {
+            if (k !in listColumn || k !in listRow) return false
+        }
+    }
+    return matrix.height == matrix.width
+}
 
 /**
  * Средняя
@@ -137,7 +160,37 @@ fun isLatinSquare(matrix: Matrix<Int>): Boolean = TODO()
  *
  * 42 ===> 0
  */
-fun sumNeighbours(matrix: Matrix<Int>): Matrix<Int> = TODO()
+fun sumNeighbours(matrix: Matrix<Int>): Matrix<Int> {
+    if (matrix.width < 1 || matrix.height < 1) throw IllegalArgumentException()
+    val result = createMatrix(matrix.height, matrix.width, matrix[0, 0])
+    if (matrix.width == 1 && matrix.height == 1) return createMatrix(1, 1, 0)
+    for (i in 0 until matrix.height) {
+        for (j in 0 until matrix.width) {
+            when {
+                i == 0 && j == 0 ->
+                    result[i, j] = matrix[i, j + 1] + matrix[i + 1, j] + matrix[i + 1, j + 1]
+                i == 0 && j == matrix.width - 1 ->
+                    result[i, j] = matrix[i, j - 1] + matrix[i + 1, j] + matrix[i + 1, j - 1]
+                i == matrix.height - 1 && j == 0 ->
+                    result[i, j] = matrix[i, j + 1] + matrix[i - 1, j] + matrix[i - 1, j + 1]
+                i == matrix.height - 1 && j == matrix.width - 1 ->
+                    result[i, j] = matrix[i, j - 1] + matrix[i - 1, j] + matrix[i - 1, j - 1]
+                i == 0 -> result[i, j] = matrix[i, j - 1] + matrix[i, j + 1] + matrix[i + 1, j + 1] +
+                        matrix[i + 1, j] + matrix[i + 1, j - 1]
+                i == matrix.height - 1 -> matrix[i, j - 1] + matrix[i, j + 1] + matrix[i - 1, j + 1] +
+                        matrix[i - 1, j] + matrix[i - 1, j - 1]
+                j == matrix.width - 1 -> matrix[i + 1, j] + matrix[i - 1, j] + matrix[i - 1, j - 1] +
+                        matrix[i, j - 1] + matrix[i + 1, j - 1]
+                j == 0 -> matrix[i + 1, j] + matrix[i - 1, j] + matrix[i - 1, j + 1] +
+                        matrix[i, j + 1] + matrix[i + 1, j + 1]
+                else -> matrix[i + 1, j] + matrix[i - 1, j] + matrix[i - 1, j + 1] +
+                        matrix[i, j + 1] + matrix[i + 1, j + 1] + matrix[i, j - 1] +
+                        matrix[i + 1, j - 1] + matrix[i - 1, j - 1]
+            }
+        }
+    }
+    return result
+}
 
 /**
  * Средняя
@@ -154,7 +207,22 @@ fun sumNeighbours(matrix: Matrix<Int>): Matrix<Int> = TODO()
  * 0 0 1 0
  * 0 0 0 0
  */
-fun findHoles(matrix: Matrix<Int>): Holes = TODO()
+fun findHoles(matrix: Matrix<Int>): Holes {
+    if (matrix.width < 1 || matrix.height < 1) throw IllegalArgumentException()
+    var columns = listOf<Int>()
+    var rows = listOf<Int>()
+    for ((newJ, i) in (0 until matrix.height).withIndex()) {
+        var listColumn = listOf<Int>()
+        var listRow = listOf<Int>()
+        for (j in 0 until matrix.width) {
+            listColumn += matrix[j, i]
+            listRow += matrix[i, j]
+        }
+        if (1 !in listColumn) columns += i
+        if (1 !in listRow) rows += newJ
+    }
+    return Holes(rows, columns)
+}
 
 /**
  * Класс для описания местонахождения "дырок" в матрице
@@ -175,7 +243,20 @@ data class Holes(val rows: List<Int>, val columns: List<Int>)
  *
  * К примеру, центральный элемент 12 = 1 + 2 + 4 + 5, элемент в левом нижнем углу 12 = 1 + 4 + 7 и так далее.
  */
-fun sumSubMatrix(matrix: Matrix<Int>): Matrix<Int> = TODO()
+fun sumSubMatrix(matrix: Matrix<Int>): Matrix<Int> {
+    if (matrix.width < 1 || matrix.height < 1) throw IllegalArgumentException()
+    val result = createMatrix(matrix.height, matrix.width, matrix[0, 0])
+    for (i in 0 until matrix.height) {
+        for (j in 0 until matrix.width) {
+            for (k in 0 until i) {
+                for (n in 0 until j) {
+                    result[i, j] = matrix[k, n]
+                }
+            }
+        }
+    }
+    return result
+}
 
 /**
  * Сложная
@@ -205,7 +286,16 @@ fun canOpenLock(key: Matrix<Int>, lock: Matrix<Int>): Triple<Boolean, Int, Int> 
  * Инвертировать заданную матрицу.
  * При инвертировании знак каждого элемента матрицы следует заменить на обратный
  */
-operator fun Matrix<Int>.unaryMinus(): Matrix<Int> = TODO(this.toString())
+operator fun Matrix<Int>.unaryMinus(): Matrix<Int> {
+    if (this.width < 1 || this.height < 1) throw IllegalArgumentException()
+    val result = createMatrix(this.height, this.width, 0)
+    for (i in 0 until this.height) {
+        for (j in 0 until this.width) {
+            result[i, j] = -1 * this[i, j]
+        }
+    }
+    return result
+}
 
 /**
  * Средняя
@@ -215,7 +305,20 @@ operator fun Matrix<Int>.unaryMinus(): Matrix<Int> = TODO(this.toString())
  * В противном случае бросить IllegalArgumentException.
  * Подробно про порядок умножения см. статью Википедии "Умножение матриц".
  */
-operator fun Matrix<Int>.times(other: Matrix<Int>): Matrix<Int> = TODO(this.toString())
+operator fun Matrix<Int>.times(other: Matrix<Int>): Matrix<Int> {
+    if (this.width < 1 || this.height < 1) throw IllegalArgumentException()
+    if (other.width < 1 || other.height < 1) throw IllegalArgumentException()
+    if (this.width != other.height) throw IllegalArgumentException()
+    val result = createMatrix(this.height, other.width, 0)
+    for (i in 0 until this.height) {
+        for (j in 0 until other.width) {
+            for (n in 0 until other.height) {
+                result[i, j] += this[i, n] * other[n, j]
+            }
+        }
+    }
+    return result
+}
 
 /**
  * Сложная

@@ -1,6 +1,8 @@
 @file:Suppress("UNUSED_PARAMETER")
 package lesson5.task1
 
+import java.lang.Math.floor
+
 /**
  * Пример
  *
@@ -130,7 +132,22 @@ fun flattenPhoneNumber(phone: String): String = TODO()
  * Прочитать строку и вернуть максимальное присутствующее в ней число (717 в примере).
  * При нарушении формата входной строки или при отсутствии в ней чисел, вернуть -1.
  */
-fun bestLongJump(jumps: String): Int = TODO()
+fun bestLongJump(jumps: String): Int? {
+    try {
+        var numberList = mutableListOf<Int>()
+        val listOfResults = jumps.split(" ").filter { it != "" }
+        if (listOfResults.isEmpty()) return -1
+        for (i in 0 until listOfResults.size) {
+            if (listOfResults[i] != "-" && listOfResults[i] != "%") {
+                numberList.add(listOfResults[i].toInt())
+            }
+        }
+        return if (numberList.isEmpty()) -1 else
+            numberList.max()
+    } catch (e: Exception) {
+        return -1
+    }
+}
 
 /**
  * Сложная
@@ -166,7 +183,7 @@ fun plusMinus(expression: String): Int {
         return sum
         }
      catch (e:NumberFormatException) {
-        throw IllegalArgumentException("For input string: $expression")
+        throw IllegalArgumentException()
     }
 }
 
@@ -192,7 +209,21 @@ fun firstDuplicateIndex(str: String): Int = TODO()
  * или пустую строку при нарушении формата строки.
  * Все цены должны быть положительными
  */
-fun mostExpensive(description: String): String = TODO()
+fun mostExpensive(description: String): String {
+    try {
+        var listOfNames = mutableListOf<String>()
+        var listOfPrices = mutableListOf<Double>()
+        var list = description.split("; ")
+        for (i in 0 until list.size) {
+            var newList = list[i].split(" ")
+            listOfNames.add(newList[0])
+            if (newList[1].toDouble() < 0.0) return "" else listOfPrices.add(newList[1].toDouble())
+        }
+        return listOfNames[listOfPrices.indexOf(listOfPrices.max())]
+    } catch (e: Exception) {
+        return ""
+    }
+}
 
 /**
  * Сложная
