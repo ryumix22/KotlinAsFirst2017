@@ -211,15 +211,15 @@ fun findHoles(matrix: Matrix<Int>): Holes {
     if (matrix.width < 1 || matrix.height < 1) throw IllegalArgumentException()
     var columns = listOf<Int>()
     var rows = listOf<Int>()
-    for ((newJ, i) in (0 until matrix.height).withIndex()) {
-        var listColumn = listOf<Int>()
-        var listRow = listOf<Int>()
-        for (j in 0 until matrix.width) {
-            listColumn += matrix[j, i]
-            listRow += matrix[i, j]
-        }
-        if (1 !in listColumn) columns += i
-        if (1 !in listRow) rows += newJ
+    for (i in 0 until matrix.height) {
+        var count = 0
+        for (j in 0 until matrix.width) if (matrix[i, j] == 1) count++
+        if (count == 0) rows += i
+    }
+    for (i in 0 until matrix.width) {
+        var count = 0
+        for (j in 0 until matrix.height) if (matrix[i, j] == 1) count++
+        if (count == 0) columns += i
     }
     return Holes(rows, columns)
 }
@@ -246,15 +246,11 @@ data class Holes(val rows: List<Int>, val columns: List<Int>)
 fun sumSubMatrix(matrix: Matrix<Int>): Matrix<Int> {
     if (matrix.width < 1 || matrix.height < 1) throw IllegalArgumentException()
     val result = createMatrix(matrix.height, matrix.width, matrix[0, 0])
-    for (i in 0 until matrix.height) {
-        for (j in 0 until matrix.width) {
-            for (k in 0 until i) {
-                for (n in 0 until j) {
-                    result[i, j] = matrix[k, n]
-                }
-            }
-        }
-    }
+    for (i in 0 until matrix.height)
+        for (j in 0 until matrix.width)
+            for (k in 0 until i)
+                for (n in 0 until j)
+                    result[i, j] += matrix[k, n]
     return result
 }
 
